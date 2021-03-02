@@ -26,7 +26,7 @@ export const signOut = () => {
         const firebase = getFirebase();
         firebase.auth.signOut()
             .then(
-                () => dispatch({ type: COMMON.LOGOUT_ERROR })
+                () => dispatch({ type: COMMON.LOGOUT_SUCCESS })
             )
             .catch(
                 () => dispatch({ type: COMMON.LOGOUT_ERROR })

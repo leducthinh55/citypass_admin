@@ -6,6 +6,9 @@ import { signOut } from 'src/stores/actions/authActions';
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 
 class Header extends Component {
+    signOut = () => {
+        this.props.signOut();
+    }
     render() {
         const { auth } = this.props;
         return (
@@ -153,7 +156,7 @@ class Header extends Component {
                             </Dropdown>
                             {auth.uid ?
                                 <Nav.Item>
-                                    <Nav.Link className="m-0" href={ROUTER.SIGN_IN}>
+                                    <Nav.Link className="m-0" onClick={this.signOut}>
                                         <span className="no-icon">Log out</span>
                                     </Nav.Link>
                                 </Nav.Item>

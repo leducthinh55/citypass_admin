@@ -4,11 +4,11 @@ import { connect } from "react-redux";
 import { ROUTER } from "src/constants";
 import Attractions from '../pages/attractions';
 class ProtectRouter extends React.Component {
-    check = (props) => {
+    check = (props, children) => {
         const { auth } = this.props;
         if (auth.uid) {
             return (
-                <Component {...props} />
+                children
             );
         }
         else {
@@ -21,36 +21,12 @@ class ProtectRouter extends React.Component {
         }
     }
     render() {
-        const { children, ...rest } = this.props;
-        console.log('props', this.props);
-        console.log(children);
+        const { children ,path } = this.props;
         return (
-            <Route path='/Attractions' render={this.check} />
+            <Route path={path} render={(props) => this.check(props, children)} />
         );
     }
 }
-
-// function ProtectRouter({ children, ...rest }) {
-//     let auth = { a: '5' };
-//     return (
-//         <Route
-//             path='/Attractions'
-//             render={({ location }) => {
-//                 console.log('location', location);
-//                 return auth.user ? (
-//                     children
-//                 ) : (
-//                         <Redirect
-//                             to={{
-//                                 pathname: "/signin",
-//                                 state: { from: location }
-//                             }}
-//                         />
-//                     )}
-//                 }
-//         />
-//     );
-// }
 
 const mapStateToProps = (state) => {
     return {

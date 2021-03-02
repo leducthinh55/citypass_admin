@@ -30,10 +30,9 @@ class App extends React.Component {
                     <Route path={ROUTER.DASHBOARD}>
                       <Dashboard />
                     </Route>
-                    <Route path={ROUTER.ATTRACTIONS}>
-                      <Dashboard />
-                    </Route>
-                    <ProtectRouter path={ROUTER.ATTRACTIONS} component={Attractions} />
+                    <ProtectRouter path={ROUTER.ATTRACTIONS}>
+                      <Attractions/>
+                    </ProtectRouter>
                   </div>
                   <Footer />
                 </div>
