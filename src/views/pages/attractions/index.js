@@ -4,6 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import * as attractionService from "src/services/attractions/attraction.service";
 import { PAGE_INDEX, SORT_BY, SORT_DIR, PAGE_SIZE } from "src/constants/common";
+import { Button } from 'primereact/button';
 const DEFAULT_VALUE = {
     sortBy: SORT_BY,
     pageIndex: PAGE_INDEX,
@@ -39,26 +40,31 @@ class Attractions extends Component {
     }
 
     onSort = async (event) => {
-        console.log(event);
-        await this.setState({ sortBy: event.sortField, sortDir: -event.sortOrder });
-        console.log(this.state.sortDir);
+        await this.setState({ sortBy: event.sortField, sortDir: -this.state.sortDir });
+        this.fetchData();
+    }
+
+    initFormCreateOrUpdate = () => {
+        
     }
     render() {
         const { data, sortBy, sortDir } = this.state
+        console.log('sortDir', sortDir)
         return (
             <div className="datatable-doc-demo">
+                <Button label="Click" icon="pi pi-check" onClick={this.initFormCreateOrUpdate}/>
                 <div className="card">
                     <DataTable className='p-datatable-customers'
                         value={data} dataKey="id"
                         emptyMessage="No record found"
-                        onSort={this.onSort}
                         sortField={sortBy}
                         sortOrder={sortDir}
+                        onSort={this.onSort}
                     >
-                        <Column field="name" header="Name" sortable={true} />
+                        <Column field="name" header="Name" sortable />
                         <Column field="description" header="Description" body={this.descriptionTemplate} />
                         <Column field="address" header="Address" />
-                        <Column field="city" header="City" sortable />
+                        <Column field="city" header="City" />
                         <Column header="Action" />
                     </DataTable>
                 </div>
