@@ -38,19 +38,27 @@ class Attractions extends Component {
         return <>{rowData.description}</>
     }
 
+    onSort = async (event) => {
+        console.log(event);
+        await this.setState({ sortBy: event.sortField, sortDir: -event.sortOrder });
+        console.log(this.state.sortDir);
+    }
     render() {
-        const { data } = this.state
+        const { data, sortBy, sortDir } = this.state
         return (
             <div className="datatable-doc-demo">
                 <div className="card">
                     <DataTable className='p-datatable-customers'
                         value={data} dataKey="id"
                         emptyMessage="No record found"
-                        editMode="cell">
-                        <Column field="name" header="Name" />
-                        <Column field="description" header="Description" body={descriptionTemplate} />
+                        onSort={this.onSort}
+                        sortField={sortBy}
+                        sortOrder={sortDir}
+                    >
+                        <Column field="name" header="Name" sortable={true} />
+                        <Column field="description" header="Description" body={this.descriptionTemplate} />
                         <Column field="address" header="Address" />
-                        <Column field="city" header="City" />
+                        <Column field="city" header="City" sortable />
                         <Column header="Action" />
                     </DataTable>
                 </div>

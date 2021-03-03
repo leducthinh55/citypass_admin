@@ -16,6 +16,7 @@ import "./assets/scss/light-bootstrap-dashboard-react.scss?v=2.0.0";
 import "./assets/css/demo.css";
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 // import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const store = createStore(rootReducer,
