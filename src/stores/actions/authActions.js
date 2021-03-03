@@ -11,7 +11,7 @@ export const signIn = (credentials) => {
                 currentUser.admin = idTokenResult.claims.admin;
                 if (!currentUser.admin) {
                     console.log('is not admin');
-                    firebase.auth.signOut()
+                    firebase.auth().signOut()
                 }
             });
             dispatch({ type: COMMON.LOGIN_SUCCESS });
@@ -24,7 +24,7 @@ export const signIn = (credentials) => {
 export const signOut = () => {
     return (dispatch, getState, { getFirebase }) => {
         const firebase = getFirebase();
-        firebase.auth.signOut()
+        firebase.auth().signOut()
             .then(
                 () => dispatch({ type: COMMON.LOGOUT_SUCCESS })
             )

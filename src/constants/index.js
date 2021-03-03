@@ -1,3 +1,4 @@
 import * as ROUTER from './route'
 import * as COMMON from "./common";
-export { ROUTER, COMMON }
+import * as API from "./api";
+export { ROUTER, COMMON, API }
