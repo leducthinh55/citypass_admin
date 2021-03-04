@@ -5,6 +5,8 @@ import { Column } from 'primereact/column';
 import * as attractionService from "src/services/attractions/attraction.service";
 import { PAGE_INDEX, SORT_BY, SORT_DIR, PAGE_SIZE } from "src/constants/common";
 import { Button } from 'primereact/button';
+import { Toolbar } from 'primereact/toolbar';
+import { InputText } from 'primereact/inputtext';
 const DEFAULT_VALUE = {
     sortBy: SORT_BY,
     pageIndex: PAGE_INDEX,
@@ -44,16 +46,45 @@ class Attractions extends Component {
         this.fetchData();
     }
 
-    initFormCreateOrUpdate = () => {
-        
+    leftContents = () => {
+        return (
+            <React.Fragment>
+                <span className="title">Manage Products</span>
+            </React.Fragment>
+        )
     }
+
+    rightContents = () => {
+        return (
+            <React.Fragment>
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText type="search" placeholder="Search..." />
+                </span>
+                <Button label="New" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={this.openNew} />
+            </React.Fragment>
+        )
+    }
+
+    openNew = () => {
+
+    }
+
+    actionBodyTemplate = (rowData) => {
+        return (
+            <React.Fragment>
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success p-mr-2" />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" />
+            </React.Fragment>
+        );
+    }
+
     render() {
         const { data, sortBy, sortDir } = this.state
-        console.log('sortDir', sortDir)
         return (
-            <div className="datatable-doc-demo">
-                <Button label="Click" icon="pi pi-check" onClick={this.initFormCreateOrUpdate}/>
+            <div className="datatable-crud-demo">
                 <div className="card">
+                    <Toolbar className="p-mb-3" left={this.leftContents} right={this.rightContents}></Toolbar>
                     <DataTable className='p-datatable-customers'
                         value={data} dataKey="id"
                         emptyMessage="No record found"
@@ -64,8 +95,8 @@ class Attractions extends Component {
                         <Column field="name" header="Name" sortable />
                         <Column field="description" header="Description" body={this.descriptionTemplate} />
                         <Column field="address" header="Address" />
-                        <Column field="city" header="City" />
-                        <Column header="Action" />
+                        <Column field="city" header="City" sortable />
+                        <Column header="Action" body={this.actionBodyTemplate} />
                     </DataTable>
                 </div>
             </div>
