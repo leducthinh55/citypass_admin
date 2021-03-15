@@ -21,9 +21,9 @@ class ProtectRouter extends React.Component {
         }
     }
     render() {
-        const { children ,path } = this.props;
+        const { children , ...rest } = this.props;
         return (
-            <Route path={path} render={(props) => this.check(props, children)} />
+            <Route {...rest} render={(props) => this.check(props, children)} />
         );
     }
 }

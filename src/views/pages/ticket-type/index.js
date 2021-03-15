@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import * as attractionService from "src/services/attractions/attraction.service";
+import * as ticketTypeService from "src/services/ticket-type/ticket-type.service";
 import { PAGE_INDEX, SORT_BY, SORT_DIR, PAGE_SIZE } from "src/constants/common";
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
@@ -13,22 +13,25 @@ import * as cityService from "src/services/city/city.service";
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import { ROUTER } from 'src/constants';
-import * as categoryService from "src/services/category/category.service";
+import * as attractionService from "src/services/attractions/attraction.service";
 const DEFAULT_VALUE = {
     sortBy: SORT_BY,
     pageIndex: PAGE_INDEX,
     sortDir: SORT_DIR,
     pageSize: PAGE_SIZE
 }
-class Attractions extends Component {
+class TicketTypes extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
-            description: '',
-            address: '',
-            isTemporarityClosed: false,
+            adultPrice: '',
+            childrenPrice: '',
+            attraction: '',
             city: '',
+            priceFrom: 0,
+            priceTo: 0,
+            priceType: 0,
             data: [],
             listCities: [],
             ...DEFAULT_VALUE,
@@ -36,11 +39,11 @@ class Attractions extends Component {
     }
 
     fetchData = async () => {
-        const { name, isTemporarityClosed, city, category, sortBy, sortDir, pageIndex, pageSize } = this.state;
-        const result = await attractionService.search(name, city, category, isTemporarityClosed, sortBy, sortDir, pageIndex, pageSize);
+        const { name, priceFrom, priceTo,priceType,attraction,  city, sortBy, sortDir, pageIndex, pageSize } = this.state;
+        const result = await ticketTypeService.search(name, priceFrom, priceTo,priceType,attraction, city, sortBy, sortDir, pageIndex, pageSize);
         const listCities = (await cityService.search('', '', 1, 0, 1000))?.data;
-        const listCategory = (await categoryService.search('', '', 1, 0, 1000))?.data;
-        this.setState({ ...result, listCities, listCategory });
+        const listAttraction = (await attractionService.getAll())?.data;
+        this.setState({ ...result, listCities, listAttraction });
     }
     componentDidMount() {
         this.fetchData();
@@ -54,17 +57,17 @@ class Attractions extends Component {
     leftContents = () => {
         return (
             <React.Fragment>
-                <span className="title">Manage Attractions</span>
+                <span className="title">Manage Ticket Type</span>
             </React.Fragment>
         )
     }
     onSearch = async () => {
-        const { selectedCity, selectedCategory } = this.state;
-        await this.setState({ city: selectedCity?.name || '', category: selectedCategory?.name || '' })
+        const { selectedCity, selectedAttraction } = this.state;
+        await this.setState({ city: selectedCity?.name || '', attraction: selectedAttraction?.name || '' })
         this.fetchData();
     }
     rightContents = () => {
-        const { listCities, selectedCity, selectedCategory, listCategory } = this.state;
+        const { listCities, selectedCity, selectedAttraction, listAttraction } = this.state;
         return (
             <React.Fragment>
                 <div className="p-col-12 mr-2">
@@ -84,11 +87,11 @@ class Attractions extends Component {
                     filterBy="name"
                 />
                 <Dropdown
-                    value={selectedCategory}
-                    options={listCategory}
-                    onChange={(e) => this.setState({ selectedCategory: e.value })}
+                    value={selectedAttraction}
+                    options={listAttraction}
+                    onChange={(e) => this.setState({ selectedAttraction: e.value })}
                     optionLabel="name"
-                    placeholder="Select category"
+                    placeholder="Select Attraction"
                     className="mr-2"
                     filter
                     showClear
@@ -169,9 +172,8 @@ class Attractions extends Component {
                     >
                         <Column header="No." body={this.noTemplate} style={{ width: '5%' }} />
                         <Column body={this.nameTemplate} header="Name" sortable style={{ width: '28%' }} />
-                        <Column field="category" header="Category" sortable style={{ width: '20%' }} />
+                        <Column field="attraction" header="Attraction" sortable style={{ width: '20%' }} />
                         <Column field="city" header="City" sortable style={{ width: '20%' }} />
-                        <Column body={this.isTemporarityClosedTemplate} header="IsClose" style={{ width: '12%' }} />
                         <Column header="Action" body={this.deleteBodyTemplate} />
                     </DataTable>
                     <Paginator rows={pageSize} totalRecords={total} first={pageIndex}
@@ -187,4 +189,4 @@ const mapStateToProps = (state) => {
         auth: state.firebase.auth
     }
 }
-export default withRouter(connect(mapStateToProps)(Attractions));
+export default withRouter(connect(mapStateToProps)(TicketTypes));

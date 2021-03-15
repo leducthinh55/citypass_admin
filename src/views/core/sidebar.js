@@ -11,19 +11,21 @@ const routes = [
     path: ROUTER.DASHBOARD,
     name: "Dashboard",
     icon: "nc-icon nc-chart-pie-35",
-    component: Dashboard,
   },
   {
     path: ROUTER.ATTRACTIONS,
     name: "Attractions",
     icon: "nc-icon nc-circle-09",
-    component: Attractions,
+  },
+  {
+    path: ROUTER.TICKET_TYPE,
+    name: "Ticket Type",
+    icon: "nc-icon nc-notes",
   },
   {
     path: ROUTER.CITY,
     name: "City",
     icon: "nc-icon nc-notes",
-    component: Attractions,
   }
 ];
 const SideBar = () => {
@@ -53,7 +55,7 @@ const SideBar = () => {
             </div>
           </a>
           <a className="simple-text" href="http://www.creative-tim.com">
-            Creative Tim
+            CITY PASS
         </a>
         </div>
         <Nav>
