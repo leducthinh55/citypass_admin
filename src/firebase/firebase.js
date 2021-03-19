@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
-
+import 'firebase/storage'; 
 const config = {
   apiKey: "AIzaSyBYC_WOnN_MP6-GjGQ02I7GdZ4VcRQ74aU",
   authDomain: "citypass131999.firebaseapp.com",
@@ -19,7 +19,7 @@ if (!firebase.apps.length) {
 //separting database API and authentication
 const db = firebase.database();
 const auth = firebase.auth();
-
+const storage = firebase.storage();
 const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
-export { firebase, db, auth, facebookProvider };
+export { firebase, db, auth, facebookProvider, storage };

@@ -26,12 +26,12 @@ class Header extends Component {
                             onClick={(e) => e.preventDefault()}
                             className="mr-2"
                         >
-                            City Pass
+                            <i className="nc-icon nc-bullet-list-67"></i>
                         </Navbar.Brand>
                     </div>
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="nav mr-auto" navbar>
-                            <Nav.Item>
+                            {/* <Nav.Item>
                                 <Nav.Link
                                     data-toggle="dropdown"
                                     href="#pablo"
@@ -96,10 +96,10 @@ class Header extends Component {
                                     <i className="nc-icon nc-zoom-split"></i>
                                     <span className="d-lg-block"> Search</span>
                                 </Nav.Link>
-                            </Nav.Item>
+                            </Nav.Item> */}
                         </Nav>
                         <Nav className="ml-auto" navbar>
-                            <Nav.Item>
+                            {/* <Nav.Item>
                                 <Nav.Link
                                     className="m-0"
                                     href="#pablo"
@@ -107,8 +107,8 @@ class Header extends Component {
                                 >
                                     <span className="no-icon">Account</span>
                                 </Nav.Link>
-                            </Nav.Item>
-                            <Dropdown as={Nav.Item}>
+                            </Nav.Item> */}
+                            {/* <Dropdown as={Nav.Item}>
                                 <Dropdown.Toggle
                                     aria-expanded={false}
                                     aria-haspopup={true}
@@ -153,7 +153,7 @@ class Header extends Component {
                                         Separated link
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown> */}
                             {auth.uid ?
                                 <Nav.Item>
                                     <Nav.Link className="m-0" onClick={this.signOut}>

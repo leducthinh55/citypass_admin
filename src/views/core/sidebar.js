@@ -14,18 +14,23 @@ const routes = [
   },
   {
     path: ROUTER.ATTRACTIONS,
-    name: "Attractions",
-    icon: "nc-icon nc-circle-09",
+    name: "Attraction",
+    icon: "nc-icon nc-album-2",
   },
   {
     path: ROUTER.TICKET_TYPE,
     name: "Ticket Type",
-    icon: "nc-icon nc-notes",
+    icon: "nc-icon nc-credit-card",
+  },
+  {
+    path: ROUTER.PASS,
+    name: "Pass",
+    icon: "nc-icon nc-single-copy-04",
   },
   {
     path: ROUTER.CITY,
     name: "City",
-    icon: "nc-icon nc-notes",
+    icon: "nc-icon nc-bank",
   }
 ];
 const SideBar = () => {
@@ -34,12 +39,9 @@ const SideBar = () => {
     return location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
   return (
-    <div className="sidebar" data-color="black">
+    <div className="sidebar" data-color="orange">
       <div
         className="sidebar-background"
-        style={{
-          backgroundImage: "url(" + "src/assets/img/sidebar-1.png" + ")",
-        }}
       />
       <div className="sidebar-wrapper">
         <div className="logo d-flex align-items-center justify-content-start">
@@ -48,15 +50,14 @@ const SideBar = () => {
             className="simple-text logo-mini mx-1"
           >
             <div className="logo-img">
-              <img
-                src={require("src/assets/img/reactlogo.png").default}
-                alt="..."
-              />
             </div>
           </a>
           <a className="simple-text" href="http://www.creative-tim.com">
-            CITY PASS
-        </a>
+            <img style={{ width: '150px' }} className='ml-4'
+              src={require("src/assets/img/citypass-logo.png").default}
+              alt="..."
+            />
+          </a>
         </div>
         <Nav>
           {routes.map((prop, key) => {

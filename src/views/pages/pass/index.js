@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import * as attractionService from "src/services/attractions/attraction.service";
+import * as passService from "src/services/passes/pass.service";
 import { PAGE_INDEX, SORT_BY, SORT_DIR, PAGE_SIZE } from "src/constants/common";
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
@@ -13,36 +13,40 @@ import * as cityService from "src/services/city/city.service";
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import { ROUTER } from 'src/constants';
-import * as categoryService from "src/services/category/category.service";
+import * as attractionService from "src/services/attractions/attraction.service";
 const DEFAULT_VALUE = {
     sortBy: SORT_BY,
     pageIndex: PAGE_INDEX,
     sortDir: SORT_DIR,
     pageSize: PAGE_SIZE
 }
-class City extends Component {
+class Pass extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
-            description: '',
-            address: '',
-            isTemporarityClosed: false,
+            price: '',
+            childrenPrice: '',
+            urlImage: '',
             city: '',
+            expireDuration: 0,
+            rate: 0,
+            priceType: 0,
             data: [],
             listCities: [],
-            ...DEFAULT_VALUE,
+            ...DEFAULT_VALUE,           
         }
     }
 
     fetchData = async () => {
-        const { name, isTemporarityClosed, city, category, sortBy, sortDir, pageIndex, pageSize } = this.state;
-        const result = await attractionService.search(name, city, category, isTemporarityClosed, sortBy, sortDir, pageIndex, pageSize);
-        const listCities = (await cityService.search('', '', 1, 0, 1000))?.data;
-        const listCategory = (await categoryService.search('', '', 1, 0, 1000))?.data;
-        this.setState({ ...result, listCities, listCategory });
+        const { name, priceFrom, priceTo, city, attraction, sortBy, sortDir, pageIndex, pageSize } = this.state;
+        const result = await passService.search(name, priceFrom, priceTo, attraction, city, sortBy, sortDir, pageIndex, pageSize);
+        this.setState({ ...result });
     }
-    componentDidMount() {
+    async componentDidMount() {
+        const listCities = (await cityService.search('', '', 1, 0, 1000))?.data;
+        const listAttraction = (await attractionService.search('', '', '', null, '', 1, 0, 1000))?.data;
+        this.setState({ listCities, listAttraction });
         this.fetchData();
     }
 
@@ -54,22 +58,32 @@ class City extends Component {
     leftContents = () => {
         return (
             <React.Fragment>
-                <span className="title">Manage Cities</span>
+                <span className="title">Manage Pass</span>
             </React.Fragment>
         )
     }
     onSearch = async () => {
-        const { selectedCity, selectedCategory } = this.state;
-        await this.setState({ city: selectedCity?.name || '', category: selectedCategory?.name || '' })
+        const { selectedCity, selectedAttraction } = this.state;
+        await this.setState({ city: selectedCity?.name || '', attraction: selectedAttraction?.name || '' })
         this.fetchData();
     }
     rightContents = () => {
-        const { listCities, selectedCity, selectedCategory, listCategory } = this.state;
+        const { listCities, selectedCity, priceFrom, priceTo, selectedAttraction, listAttraction } = this.state;
         return (
             <React.Fragment>
                 <div className="p-col-12 mr-2">
                     <div className="p-inputgroup">
                         <InputText placeholder="Enter name" onChange={(e) => { this.setState({ name: e.target.value }) }} />
+                    </div>
+                </div>
+                <div className="p-col-12 mr-2">
+                    <div className="p-inputgroup">
+                        <InputText placeholder="Price From" onChange={(e) => { this.setState({ priceFrom: e.target.value }) }} />
+                    </div>
+                </div>
+                <div className="p-col-12 mr-2">
+                    <div className="p-inputgroup">
+                        <InputText placeholder="Price To" onChange={(e) => { this.setState({ priceTo: e.target.value }) }} />
                     </div>
                 </div>
                 <Dropdown
@@ -84,11 +98,11 @@ class City extends Component {
                     filterBy="name"
                 />
                 <Dropdown
-                    value={selectedCategory}
-                    options={listCategory}
-                    onChange={(e) => this.setState({ selectedCategory: e.value })}
+                    value={selectedAttraction}
+                    options={listAttraction}
+                    onChange={(e) => this.setState({ selectedAttraction: e.value })}
                     optionLabel="name"
-                    placeholder="Select category"
+                    placeholder="Select Attraction"
                     className="mr-2"
                     filter
                     showClear
@@ -103,7 +117,7 @@ class City extends Component {
     openNew = () => {
         const { history } = this.props;
         history.push({
-            pathname: ROUTER.ATTRACTIONS_CREATE
+            pathname: ROUTER.PASS_CREATE
         });
     }
 
@@ -137,7 +151,7 @@ class City extends Component {
         return <span>{column.rowIndex + 1}</span>
     }
     nameTemplate = (rowData) => {
-        return <Link to={`${ROUTER.ATTRACTIONS}/${rowData.id}`}>{rowData.name}</Link>
+        return <Link to={`${ROUTER.PASS}/${rowData.id}`}>{rowData.name}</Link>
     }
     isTemporarityClosedTemplate = (rowData) => {
         return rowData.isTemporarityClosed ? <span>True</span> : <span>False</span>
@@ -168,10 +182,10 @@ class City extends Component {
                         onSort={this.onSort}
                     >
                         <Column header="No." body={this.noTemplate} style={{ width: '5%' }} />
-                        <Column body={this.nameTemplate} header="Name" sortable style={{ width: '28%' }} />
-                        <Column field="category" header="Category" sortable style={{ width: '20%' }} />
-                        <Column field="city" header="City" sortable style={{ width: '20%' }} />
-                        <Column body={this.isTemporarityClosedTemplate} header="IsClose" style={{ width: '12%' }} />
+                        <Column body={this.nameTemplate} header="Name" sortable style={{ width: '30%' }} />
+                        <Column field="childrenPrice" header="Children Price" sortable style={{ width: '18%' }} />
+                        <Column field="price" header="Adult Price" sortable style={{ width: '18%' }} />
+                        <Column field="expireDuration" header="Expire (day)" sortable style={{ width: '15%' }} />
                         <Column header="Action" body={this.deleteBodyTemplate} />
                     </DataTable>
                     <Paginator rows={pageSize} totalRecords={total} first={pageIndex}
@@ -187,4 +201,4 @@ const mapStateToProps = (state) => {
         auth: state.firebase.auth
     }
 }
-export default withRouter(connect(mapStateToProps)(City));
+export default withRouter(connect(mapStateToProps)(Pass));

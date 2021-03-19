@@ -26,3 +26,7 @@
     min-width: 0;
     width: 100%;
 }
+
+.w-free {
+    width: 108px !important;
+}

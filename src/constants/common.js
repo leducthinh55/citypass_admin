@@ -7,3 +7,5 @@ export const PAGE_INDEX = 0;
 export const SORT_BY = 'CreateAt';
 export const SORT_DIR = -1;
 export const PAGE_SIZE = 10;
+
+export const CREATE_COLLECTION = 'CREATE_COLLECTION'

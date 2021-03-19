@@ -110,13 +110,13 @@ class Attractions extends Component {
     deleteBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <Button icon="pi pi-trash" className="p-button-danger" label="Delete" onClick={() => this.onDelete(rowData)} />
+                <Button icon="pi pi-times p-c" className="p-button-warning" label="Disable" onClick={() => this.onDelete(rowData)} />
             </React.Fragment>
         );
     }
     onDelete = (rowData) => {
         confirmDialog({
-            message: `Are you sure you want to delete ${rowData.name}?`,
+            message: `Are you sure you want to disable ${rowData.name}?`,
             header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
             acceptClassName: 'p-button-danger',

@@ -39,13 +39,14 @@ class TicketTypes extends Component {
     }
 
     fetchData = async () => {
-        const { name, priceFrom, priceTo,priceType,attraction,  city, sortBy, sortDir, pageIndex, pageSize } = this.state;
-        const result = await ticketTypeService.search(name, priceFrom, priceTo,priceType,attraction, city, sortBy, sortDir, pageIndex, pageSize);
-        const listCities = (await cityService.search('', '', 1, 0, 1000))?.data;
-        const listAttraction = (await attractionService.getAll())?.data;
-        this.setState({ ...result, listCities, listAttraction });
+        const { name, priceFrom, priceTo, priceType, attraction, city, sortBy, sortDir, pageIndex, pageSize } = this.state;
+        const result = await ticketTypeService.search(name, priceFrom, priceTo, priceType, attraction, city, sortBy, sortDir, pageIndex, pageSize);
+        this.setState({ ...result });
     }
-    componentDidMount() {
+    async componentDidMount() {
+        const listCities = (await cityService.search('', '', 1, 0, 1000))?.data;
+        const listAttraction = (await attractionService.search('', '', '', null, '', 1, 0, 1000))?.data;
+        this.setState({ listCities, listAttraction });
         this.fetchData();
     }
 
@@ -106,20 +107,20 @@ class TicketTypes extends Component {
     openNew = () => {
         const { history } = this.props;
         history.push({
-            pathname: ROUTER.ATTRACTIONS_CREATE
+            pathname: ROUTER.TICKET_TYPE_CREATE
         });
     }
 
     deleteBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <Button icon="pi pi-trash" className="p-button-danger" label="Delete" onClick={() => this.onDelete(rowData)} />
+                <Button icon="pi pi-times p-c" className="p-button-warning w-free" label="Disable" onClick={() => this.onDelete(rowData)} />
             </React.Fragment>
         );
     }
     onDelete = (rowData) => {
         confirmDialog({
-            message: `Are you sure you want to delete ${rowData.name}?`,
+            message: `Are you sure you want to disable ${rowData.name}?`,
             header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
             acceptClassName: 'p-button-danger',
@@ -140,7 +141,7 @@ class TicketTypes extends Component {
         return <span>{column.rowIndex + 1}</span>
     }
     nameTemplate = (rowData) => {
-        return <Link to={`${ROUTER.ATTRACTIONS}/${rowData.id}`}>{rowData.name}</Link>
+        return <Link to={`${ROUTER.TICKET_TYPE}/${rowData.id}`}>{rowData.name}</Link>
     }
     isTemporarityClosedTemplate = (rowData) => {
         return rowData.isTemporarityClosed ? <span>True</span> : <span>False</span>
@@ -171,10 +172,12 @@ class TicketTypes extends Component {
                         onSort={this.onSort}
                     >
                         <Column header="No." body={this.noTemplate} style={{ width: '5%' }} />
-                        <Column body={this.nameTemplate} header="Name" sortable style={{ width: '28%' }} />
-                        <Column field="attraction" header="Attraction" sortable style={{ width: '20%' }} />
-                        <Column field="city" header="City" sortable style={{ width: '20%' }} />
-                        <Column header="Action" body={this.deleteBodyTemplate} />
+                        <Column body={this.nameTemplate} header="Name" sortable style={{ width: '20%' }} />
+                        <Column field="adultPrice" header="Adult Price(VND)" sortable style={{ width: '16%' }} />
+                        <Column field="childrenPrice" header="Children Price(VND)" sortable style={{ width: '16%' }} />
+                        <Column field="atrraction" header="Attraction" sortable style={{ width: '17%' }} />
+                        <Column field="city" header="City" sortable style={{ width: '15%' }} />
+                        <Column header="Action" body={this.deleteBodyTemplate} /> 
                     </DataTable>
                     <Paginator rows={pageSize} totalRecords={total} first={pageIndex}
                         onPageChange={this.onPageChange}

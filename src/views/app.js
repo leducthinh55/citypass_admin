@@ -8,10 +8,13 @@ import {
 import { SideBar, Header, Footer } from "./core";
 import Dashboard from "./pages/dashboard";
 import Attractions from "./pages/attractions";
+import Pass from "./pages/pass";
+import PassCreateUpdate from "./pages/pass/create-update";
 import AttractionCreateUpdate from "./pages/attractions/create-update";
 import Login from "./pages/auth/login";
 import City from "./pages/city";
 import TicketTypes from "./pages/ticket-type";
+import TicketTypeCreateUpdate from "./pages/ticket-type/create-update";
 import { ROUTER } from 'src/constants';
 import { connect } from "react-redux";
 import ProtectRouter from './core/protect-router';
@@ -51,6 +54,21 @@ class App extends React.Component {
                           </ProtectRouter>
                           <ProtectRouter exact path={ROUTER.TICKET_TYPE}>
                             <TicketTypes />
+                          </ProtectRouter>
+                          <ProtectRouter exact path={ROUTER.TICKET_TYPE_CREATE}>
+                            <TicketTypeCreateUpdate/>
+                          </ProtectRouter>
+                          <ProtectRouter exact path={ROUTER.TICKET_TYPE_UPDATE}>
+                            <TicketTypeCreateUpdate/>
+                          </ProtectRouter>
+                          <ProtectRouter exact path={ROUTER.PASS}>
+                            <Pass/>
+                          </ProtectRouter>
+                          <ProtectRouter exact path={ROUTER.PASS_CREATE}>
+                            <PassCreateUpdate/>
+                          </ProtectRouter>
+                          <ProtectRouter exact path={ROUTER.PASS_UPDATE}>
+                            <PassCreateUpdate/>
                           </ProtectRouter>
                           <ProtectRouter exact path={ROUTER.CITY}>
                             <City />

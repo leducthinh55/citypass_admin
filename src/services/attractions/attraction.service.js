@@ -1,7 +1,7 @@
 import axiosClient from 'src/utils/axios-client'
 import { ATTRACTIONS, ATTRACTIONS_ALL } from "src/constants/api";
 import { PAGE_INDEX, SORT_BY, SORT_DIR, PAGE_SIZE } from "src/constants/common";
-const search = async (name, city, category, IsTemporarityClosed = false, sortBy = SORT_BY, sortDir = SORT_DIR, pageIndex = PAGE_INDEX, pageSize = PAGE_SIZE) => {
+const search = async (name, city, category, IsTemporarityClosed, sortBy = SORT_BY, sortDir = SORT_DIR, pageIndex = PAGE_INDEX, pageSize = PAGE_SIZE) => {
     try {
         const params = {
             name,

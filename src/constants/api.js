@@ -6,3 +6,5 @@ export const CATEGORY = '/categories'
 
 export const TICKET_TYPE = '/ticket-types'
 
+export const PASS = '/passes'
+

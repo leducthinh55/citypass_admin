@@ -8,3 +8,6 @@ export const TICKET_TYPE = "/ticket-type";
 export const TICKET_TYPE_CREATE = "/ticket-type/create";
 export const TICKET_TYPE_UPDATE = "/ticket-type/:id";
 export const CITY = "/city";
+export const PASS = "/pass";
+export const PASS_CREATE = "/pass/create";
+export const PASS_UPDATE = "/pass/:id";
