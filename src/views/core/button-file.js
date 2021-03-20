@@ -18,7 +18,7 @@ const FileUploader = props => {
   return (
     <>
       <Button onClick={handleClick} variant="warning"  className="btn-fill pull-right">
-        Upload image
+        Upload
       </Button>
       <input
         type="file"

@@ -18,7 +18,9 @@ class AttractionCreateUpdate extends Component {
         super(props);
         this.toast = React.createRef();
         this.state = {
-            listImage: [1, 2, 3, 4, 5]
+            listImage: ['src/assets/img/suoi_tien1.jfif',
+             'src/assets/img/suoi_tien1.jfif', 
+             'src/assets/img/suoi_tien1.jfif', 'src/assets/img/suoi_tien1.jfif', 'src/assets/img/suoi_tien1.jfif', 'src/assets/img/suoi_tien1.jfif']
         }
     }
     componentDidMount = async () => {
@@ -95,6 +97,11 @@ class AttractionCreateUpdate extends Component {
     deleteImage = (i) => {
         const {listImage} = this.state;
         listImage.splice(i,1);
+        this.setState({listImage});
+    }
+    handleFile = (e) => {
+        const {listImage} = this.state;
+        listImage.push(5);
         this.setState({listImage});
     }
     render() {
@@ -196,11 +203,11 @@ class AttractionCreateUpdate extends Component {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row style={{marginTop: '15px'}}>
                                 {listImage.map((v, i) => {
                                     return (
                                         <Col>
-                                            <label>Image</label>
+                                            
                                             <Form.Group>
                                                 <div class="img-wrap" style={{
                                                     position: "relative",
@@ -224,7 +231,7 @@ class AttractionCreateUpdate extends Component {
                                                         borderRadius: '50%',
                                                     }}>&times;</span>
                                                     <img style={{ width: '150px' }}
-                                                        src={require("src/assets/img/suoi_tien1.jfif").default}
+                                                        src={require('src/assets/img/suoi_tien1.jfif').default}
                                                         alt="..."
                                                     />
                                                 </div>
@@ -235,7 +242,7 @@ class AttractionCreateUpdate extends Component {
                                 })}
                                 <Col>
                                     <Form.Group style={{ paddingTop: '50px' }}>
-                                        <FileUploader />
+                                        <FileUploader handleFile={this.handleFile}/>
                                     </Form.Group>
 
                                 </Col>
