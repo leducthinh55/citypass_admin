@@ -11,7 +11,10 @@ import { storage } from 'src/firebase/firebase'
 import { Toast } from 'primereact/toast';
 import Collections from './collections';
 import ListCollections from './list-collections';
+import { confirmDialog } from 'primereact/confirmdialog';
+import NumberFormat from 'react-number-format';
 const IMAGE_DEFAULT = 'https://www.jaipuriaschoolpatna.in/wp-content/uploads/2016/11/blank-img.jpg';
+
 class PassCreateUpdate extends Component {
     constructor(props) {
         super(props);
@@ -59,7 +62,6 @@ class PassCreateUpdate extends Component {
             id, urlImage, name, description, price, childrenPrice, expireDuration, collections
         }
         if (pathname === ROUTER.PASS_CREATE) {
-            console.log('fasfasfasdf');
             const res = await passService.create(data);
             if (res) {
                 this.props.history.push(ROUTER.PASS);
@@ -136,6 +138,18 @@ class PassCreateUpdate extends Component {
             this.setState({ image: e.target?.files[0] });
         }
     }
+    onSave = () => {
+        this.props.history.push(ROUTER.PASS)
+    }
+    onDelete = () => {
+        confirmDialog({
+            message: `Are you sure you want to DISABLE pass Vòng quanh Hồ Chí Minh?`,
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptClassName: 'p-button-danger',
+            accept: async () => this.props.history.push(ROUTER.PASS)
+        });
+    }
     render() {
         const { name, description, expireDuration, childrenPrice, price, listTicketType, image, collections, urlImage, adultPriceAdd, childrenPriceAdd } = this.state;
         const { pathname } = this.props.location;
@@ -151,7 +165,7 @@ class PassCreateUpdate extends Component {
                             <Row>
                                 <Col md="12">
                                     <Form.Group>
-                                        <label>NAME</label>
+                                        <label>NAME <span className='red-span'>(*)</span></label>
                                         <InputText className='col-12' value={name} onChange={(e) => this.setState({ name: e.target.value })} />
                                     </Form.Group>
                                 </Col>
@@ -167,19 +181,33 @@ class PassCreateUpdate extends Component {
                             <Row>
                                 <Col className="pr-1" md="4">
                                     <Form.Group>
-                                        <label>adult price ({adultPriceAdd}) </label>
-                                        <InputText type='number' className='col-12' value={price} onChange={(e) => this.setState({ price: e.target.value })} />
+                                        <label>adult price ({adultPriceAdd}) <span className='red-span'>(*)</span></label>
+                                        <NumberFormat style={{border: '1px solid #ced4da'}} className='col-12' value={price} thousandSeparator={true} suffix=' ₫' onValueChange={(e) => {
+                                            const { formattedValue, value } = e;
+                                            // formattedValue = $2,223
+                                            // value ie, 2223
+                                            this.setState({ price: formattedValue })
+                                        }}
+                                        />
                                     </Form.Group>
                                 </Col>
                                 <Col className="pr-1" md="4">
                                     <Form.Group>
                                         <label>children price ({childrenPriceAdd})</label>
-                                        <InputText type='number' className='col-12' value={childrenPrice} onChange={(e) => this.setState({ childrenPrice: e.target.value })} />
+                                        <NumberFormat style={{border: '1px solid #ced4da'}} className='col-12' value={childrenPrice} thousandSeparator={true} suffix=' ₫' onValueChange={(e) => {
+                                            const { formattedValue, value } = e;
+                                            // formattedValue = $2,223
+                                            // value ie, 2223
+                                            this.setState({ childrenPrice: formattedValue })
+                                        }}
+                                        />
+
+
                                     </Form.Group>
                                 </Col>
                                 <Col className="pr-1" md="4">
                                     <Form.Group>
-                                        <label>Expire Duration (day)</label>
+                                        <label>Expire Duration (day) <span className='red-span'>(*)</span></label>
                                         <InputText type='number' className='col-12' value={expireDuration} onChange={(e) => this.setState({ expireDuration: e.target.value })} />
                                     </Form.Group>
                                 </Col>
@@ -194,21 +222,29 @@ class PassCreateUpdate extends Component {
                                 </Col>
                             </Row>
                             <Row>
-                                <Col md="10">
-                                    <ListCollections
-                                        onChangeMaxConstrain={this.onChangeMaxConstrain}
-                                        deleteCollection={this.deleteCollection} deleteTicketType={this.deleteTicketType} addTicketType={this.addTicketType} collections={collections} />
+                                <Col md="12">
 
+                                    <Form.Group className='ml-2'>
+                                        <label>Collection <span className='red-span'>(*)</span></label>
+                                        <ListCollections
+                                            onChangeMaxConstrain={this.onChangeMaxConstrain}
+                                            deleteCollection={this.deleteCollection} deleteTicketType={this.deleteTicketType} addTicketType={this.addTicketType} collections={collections} />
+                                    </Form.Group>
                                 </Col>
                             </Row>
-                            <Button
-                                className="btn-fill pull-right"
-                                type="submit"
-                                variant="info"
-                            >
-                                Save Attraction
+                            <Row className='mt-2'>
+                                <Col>
+                                    <Button
+                                        className="btn-fill pull-right"
+                                        variant="info"
+                                        style={{ width: '100px', marginLeft: '10px' }}
+                                        onClick={this.onSave}
+                                    >
+                                        Save
                                 </Button>
-                            <div className="clearfix"></div>
+                                    <Button variant="danger" style={{ width: '100px' }} className="btn-fill pull-right ml-4" onClick={() => this.onDelete()} >Disable</Button>
+                                </Col>
+                            </Row>
                         </Form>
                     </Card.Body>
                 </Card>

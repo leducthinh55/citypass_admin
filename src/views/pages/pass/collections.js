@@ -57,10 +57,10 @@ class Collections extends Component {
             <div>
                 <Row>
                     <Col md='6'>
-                        <InputText min='1' type='number' placeholder='Enter max contrain' value={maxConstrain} onChange={this.onChangeMaxConstrain} />
+                        <label>Max Constraint:<span className='red-span'>(*)</span></label>   <InputText className='ml-2' min='1' type='number' placeholder='Enter max contrain' value={maxConstrain} onChange={this.onChangeMaxConstrain} />
                     </Col>
                     <Col md='6'>
-                        <Button className='btn-fill pull-right' variant='danger' onClick={() => this.props.deleteCollection(this.props.index)}>Delete Collection</Button>
+                        <Button className='btn-fill pull-right' variant='danger'  style={{marginLeft: '143px'}} onClick={() => this.props.deleteCollection(this.props.index)}>Delete Collection</Button>
                     </Col>
 
                     <Table>
@@ -68,7 +68,7 @@ class Collections extends Component {
                             {ticketTypes.map((v, i) =>
                                 <tr key={i}>
                                     <td>{v.name}</td>
-                                    <td><Button className='btn-fill pull-right' onClick={() => this.onDelete(i)} variant='danger'>Delete</Button></td>
+                                    <td><Button className='btn-fill pull-right' variant='warning' style={{width:'90px'}} onClick={() => this.onDelete(i)}>Delete</Button></td>
                                 </tr>
                             )}
                             <tr>
@@ -78,7 +78,7 @@ class Collections extends Component {
                                     onChange={(e) => this.setState({ ticketType: e.value })}
                                     optionLabel="name" filterBy='name' className='col-12' placeholder="Select a Attraction" />
                                 </td>
-                                <td><Button className='btn-fill pull-right' onClick={this.addTicketTypes}>Add</Button></td>
+                                <td><Button variant='success' className='btn-fill pull-right' style={{width:'90px'}} onClick={this.addTicketTypes}>Add</Button></td>
                             </tr>
                         </tbody>
                     </Table>

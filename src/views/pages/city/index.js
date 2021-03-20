@@ -20,6 +20,16 @@ const DEFAULT_VALUE = {
     sortDir: SORT_DIR,
     pageSize: PAGE_SIZE
 }
+const data = [
+    {
+        id: 1,
+        name: 'Thành phố Hồ Chí Minh',
+    },
+    {
+        id: 2,
+        name: 'Đà Lạt',
+    }
+]
 class City extends Component {
     constructor(props) {
         super(props);
@@ -29,21 +39,10 @@ class City extends Component {
             address: '',
             isTemporarityClosed: false,
             city: '',
-            data: [],
+            data: data,
             listCities: [],
             ...DEFAULT_VALUE,
         }
-    }
-
-    fetchData = async () => {
-        const { name, isTemporarityClosed, city, category, sortBy, sortDir, pageIndex, pageSize } = this.state;
-        const result = await attractionService.search(name, city, category, isTemporarityClosed, sortBy, sortDir, pageIndex, pageSize);
-        const listCities = (await cityService.search('', '', 1, 0, 1000))?.data;
-        const listCategory = (await categoryService.search('', '', 1, 0, 1000))?.data;
-        this.setState({ ...result, listCities, listCategory });
-    }
-    componentDidMount() {
-        this.fetchData();
     }
 
     onSort = async (event) => {
@@ -72,29 +71,7 @@ class City extends Component {
                         <InputText placeholder="Enter name" onChange={(e) => { this.setState({ name: e.target.value }) }} />
                     </div>
                 </div>
-                <Dropdown
-                    value={selectedCity}
-                    options={listCities}
-                    onChange={(e) => this.setState({ selectedCity: e.value })}
-                    optionLabel="name"
-                    placeholder="Select city"
-                    className="mr-2"
-                    filter
-                    showClear
-                    filterBy="name"
-                />
-                <Dropdown
-                    value={selectedCategory}
-                    options={listCategory}
-                    onChange={(e) => this.setState({ selectedCategory: e.value })}
-                    optionLabel="name"
-                    placeholder="Select category"
-                    className="mr-2"
-                    filter
-                    showClear
-                    filterBy="name"
-                />
-                <Button label="Search" icon="pi pi-search" className="p-button-secondary mr-2" onClick={this.onSearch} />
+                <Button label="Search" icon="pi pi-search" className="p-button-secondary mr-2"/>
                 <Button label="New" icon="pi pi-plus" className="p-button-success p-mr-2" onClick={this.openNew} />
             </React.Fragment>
         )
@@ -103,7 +80,7 @@ class City extends Component {
     openNew = () => {
         const { history } = this.props;
         history.push({
-            pathname: ROUTER.ATTRACTIONS_CREATE
+            pathname: ROUTER.CITY_CREATE
         });
     }
 
@@ -137,7 +114,7 @@ class City extends Component {
         return <span>{column.rowIndex + 1}</span>
     }
     nameTemplate = (rowData) => {
-        return <Link to={`${ROUTER.ATTRACTIONS}/${rowData.id}`}>{rowData.name}</Link>
+        return <Link to={ROUTER.CITY_UPDATE}>{rowData.name}</Link>
     }
     isTemporarityClosedTemplate = (rowData) => {
         return rowData.isTemporarityClosed ? <span>True</span> : <span>False</span>
@@ -163,16 +140,10 @@ class City extends Component {
                     <DataTable className='p-datatable-customers p-datatable-sm'
                         value={data} dataKey="id"
                         emptyMessage="No record found"
-                        sortField={sortBy}
-                        sortOrder={sortDir}
-                        onSort={this.onSort}
+                        sortable
                     >
-                        <Column header="No." body={this.noTemplate} style={{ width: '5%' }} />
-                        <Column body={this.nameTemplate} header="Name" sortable style={{ width: '28%' }} />
-                        <Column field="category" header="Category" sortable style={{ width: '20%' }} />
-                        <Column field="city" header="City" sortable style={{ width: '20%' }} />
-                        <Column body={this.isTemporarityClosedTemplate} header="IsClose" style={{ width: '12%' }} />
-                        <Column header="Action" body={this.deleteBodyTemplate} />
+                        <Column header="No." body={this.noTemplate} style={{ width: '10%' }} />
+                        <Column body={this.nameTemplate} header="Name" sortable style={{ width: '95%' }} />
                     </DataTable>
                     <Paginator rows={pageSize} totalRecords={total} first={pageIndex}
                         onPageChange={this.onPageChange}

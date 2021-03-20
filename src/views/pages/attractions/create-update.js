@@ -10,11 +10,15 @@ import * as categoryService from "src/services/category/category.service";
 import * as attractionService from "src/services/attractions/attraction.service";
 import { ROUTER } from 'src/constants';
 import { Toast } from 'primereact/toast';
+import { confirmDialog } from 'primereact/confirmdialog';
+import NumberFormat from 'react-number-format';
+import FileUploader from 'src/views/core/button-file';
 class AttractionCreateUpdate extends Component {
     constructor(props) {
         super(props);
         this.toast = React.createRef();
         this.state = {
+            listImage: [1, 2, 3, 4, 5]
         }
     }
     componentDidMount = async () => {
@@ -29,10 +33,13 @@ class AttractionCreateUpdate extends Component {
             }
             attractions.city.atrractions = null;
             attractions.category.atrractions = null;
-            this.setState({ listCities, listCategories, ...attractions });
+            this.setState({ listCities, listCategories, ...attractions, childrenPrice: 500000, adultPrice: 1000000, });
         }
         else {
-            this.setState({ listCities, listCategories });
+            await this.setState({
+                listCities, listCategories,
+
+            });
         }
     }
 
@@ -50,24 +57,24 @@ class AttractionCreateUpdate extends Component {
             isTemporarityClosed
         }
         if (pathname === ROUTER.ATTRACTIONS_CREATE) {
-            const res = await attractionService.create(data);
-            if(res) {
-                this.showSuccess('Create Successful')
-                this.props.history.push(ROUTER.ATTRACTIONS);
-            }
-            else {
-                this.showError('Create Fail')
-            }
+            // const res = await attractionService.create(data);
+            // if (res) {
+            //     this.showSuccess('Create Successful')
+            //     this.props.history.push(ROUTER.ATTRACTIONS);
+            // }
+            // else {
+            //     this.showError('Create Fail')
+            // }
         }
         else {
-            const res = await attractionService.update(data);
-            if(res) {
-                await this.showSuccess('Update Successful')
-                this.props.history.push(ROUTER.ATTRACTIONS);
-            }
-            else {
-                this.showError('Update Fail')
-            }
+            // const res = await attractionService.update(data);
+            // if (res) {
+            //     await this.showSuccess('Update Successful')
+            //     this.props.history.push(ROUTER.ATTRACTIONS);
+            // }
+            // else {
+            //     this.showError('Update Fail')
+            // }
         }
     }
     showSuccess = async (message) => {
@@ -76,8 +83,22 @@ class AttractionCreateUpdate extends Component {
     showError(message) {
         this.toast.current.show({ severity: 'error', summary: 'Error Message', detail: message });
     }
+    onDelete = () => {
+        confirmDialog({
+            message: `Are you sure you want to delete attraction Suối Tiên?`,
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptClassName: 'p-button-danger',
+            accept: async () => this.props.history.push(ROUTER.ATTRACTIONS)
+        });
+    }
+    deleteImage = (i) => {
+        const {listImage} = this.state;
+        listImage.splice(i,1);
+        this.setState({listImage});
+    }
     render() {
-        const { name, address, description, city, category, isTemporarityClosed, listCities, listCategories } = this.state;
+        const { listImage, name, address, description, city, category, isTemporarityClosed, listCities, listCategories, adultPrice, childrenPrice } = this.state;
         const { pathname } = this.props.location;
         return (
             <div className="datatable-crud-demo">
@@ -91,7 +112,7 @@ class AttractionCreateUpdate extends Component {
                             <Row>
                                 <Col md="12">
                                     <Form.Group>
-                                        <label>NAME</label>
+                                        <label>NAME <span className='red-span'>(*)</span></label>
                                         <InputText className='col-12' value={name} onChange={(e) => this.setState({ name: e.target.value })} />
                                     </Form.Group>
                                 </Col>
@@ -99,7 +120,7 @@ class AttractionCreateUpdate extends Component {
                             <Row>
                                 <Col md="12">
                                     <Form.Group>
-                                        <label>ADDRESS</label>
+                                        <label>ADDRESS <span className='red-span'>(*)</span></label>
                                         <InputText className='col-12' value={address} onChange={(e) => this.setState({ address: e.target.value })} />
                                     </Form.Group>
                                 </Col>
@@ -113,9 +134,35 @@ class AttractionCreateUpdate extends Component {
                                 </Col>
                             </Row>
                             <Row>
+                                <Col className="pr-1" md="6">
+                                    <Form.Group>
+                                        <label>adult price<span className='red-span'>(*)</span></label>
+                                        <NumberFormat style={{ border: '1px solid #ced4da' }} className='col-12' value={adultPrice} thousandSeparator={true} suffix=' ₫' onValueChange={(e) => {
+                                            const { formattedValue, value } = e;
+                                            // formattedValue = $2,223
+                                            // value ie, 2223
+                                            this.setState({ adultPrice: formattedValue })
+                                        }}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col className="pr-1" md="6">
+                                    <Form.Group>
+                                        <label>children price </label>
+                                        <NumberFormat style={{ border: '1px solid #ced4da' }} className='col-12' value={childrenPrice} thousandSeparator={true} suffix=' ₫' onValueChange={(e) => {
+                                            const { formattedValue, value } = e;
+                                            // formattedValue = $2,223
+                                            // value ie, 2223
+                                            this.setState({ childrenPrice: formattedValue })
+                                        }}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
                                 <Col className="pr-1" md="4">
                                     <Form.Group>
-                                        <label>Category</label>
+                                        <label>Category <span className='red-span'>(*)</span></label>
                                         <Dropdown options={listCategories}
                                             value={category}
                                             onChange={(e) => this.setState({ category: e.value })}
@@ -124,7 +171,7 @@ class AttractionCreateUpdate extends Component {
                                 </Col>
                                 <Col className="pr-1" md="4">
                                     <Form.Group>
-                                        <label>City</label>
+                                        <label>City <span className='red-span'>(*)</span></label>
                                         <Dropdown options={listCities}
                                             value={city}
                                             onChange={(e) => this.setState({ city: e.value })}
@@ -133,7 +180,7 @@ class AttractionCreateUpdate extends Component {
                                 </Col>
                                 <Col className="px-1" md="4">
                                     <Form.Group>
-                                        <label>Is Close</label>
+                                        <label>Is Close <span className='red-span'>(*)</span></label>
                                         <Row className='col-12'>
                                             <Col className='pl-5'>
                                                 <RadioButton value={false} name="isTemporarityClosed"
@@ -149,18 +196,69 @@ class AttractionCreateUpdate extends Component {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            <Button
-                                className="btn-fill pull-right"
-                                type="submit"
-                                variant="info"
-                            >
-                                Save Attraction
+                            <Row>
+                                {listImage.map((v, i) => {
+                                    return (
+                                        <Col>
+                                            <label>Image</label>
+                                            <Form.Group>
+                                                <div class="img-wrap" style={{
+                                                    position: "relative",
+                                                    display: 'inline-block',
+                                                    fontSize: '0'
+                                                }}>
+                                                    <span onClick={() =>this.deleteImage(i)} class="close" style={{
+                                                        position: 'absolute',
+                                                        top: '2px',
+                                                        right: '2px',
+                                                        zIndex: '100',
+                                                        backgroundColor: '#FFF',
+                                                        padding: '5px 2px 2px',
+                                                        color: '#000',
+                                                        fontWeight: 'bold',
+                                                        cursor: 'pointer',
+                                                        opacity: '.5',
+                                                        textAlign: 'center',
+                                                        fontSize: '22px',
+                                                        lineHeight: '10px',
+                                                        borderRadius: '50%',
+                                                    }}>&times;</span>
+                                                    <img style={{ width: '150px' }}
+                                                        src={require("src/assets/img/suoi_tien1.jfif").default}
+                                                        alt="..."
+                                                    />
+                                                </div>
+                                            </Form.Group>
+
+                                        </Col>
+                                    )
+                                })}
+                                <Col>
+                                    <Form.Group style={{ paddingTop: '50px' }}>
+                                        <FileUploader />
+                                    </Form.Group>
+
+                                </Col>
+                            </Row>
+                            <Row className='mt-2'>
+                                <Col>
+                                    <Button
+                                        className="btn-fill pull-right"
+                                        variant="info"
+                                        style={{ width: '100px' }}
+                                        onClick={() => this.props.history.push(ROUTER.ATTRACTIONS)}
+                                    >
+                                        Save
                                 </Button>
-                            <div className="clearfix"></div>
+                                    <Button variant="danger" style={{ width: '100px' }} className="btn-fill pull-right ml-4" onClick={this.onDelete} >Disable</Button>
+
+                                </Col>
+
+                            </Row>
                         </Form>
                     </Card.Body>
                 </Card>
-            </div>
+            </div >
         );
     }
 }

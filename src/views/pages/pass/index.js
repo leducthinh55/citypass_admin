@@ -34,7 +34,7 @@ class Pass extends Component {
             priceType: 0,
             data: [],
             listCities: [],
-            ...DEFAULT_VALUE,           
+            ...DEFAULT_VALUE,
         }
     }
 
@@ -58,7 +58,7 @@ class Pass extends Component {
     leftContents = () => {
         return (
             <React.Fragment>
-                <span className="title">Manage Pass</span>
+                <span className="title"></span>
             </React.Fragment>
         )
     }
@@ -168,6 +168,20 @@ class Pass extends Component {
             state: { ...history.location.state, ...state }
         });
     }
+    formatter = new Intl.NumberFormat('vn-VN', {
+        currency: 'USD',
+
+        // These options are needed to round to whole numbers if that's what you want.
+        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    });
+
+    childrenPriceTemplate = (rowData) => {
+        return <span>{this.formatter.format(rowData.childrenPrice)}  ₫</span>
+    }
+    PriceTemplate = (rowData) => {
+        return <span>{this.formatter.format(rowData.price)}  ₫</span>
+    }
     render() {
         const { data, sortBy, sortDir, pageIndex, pageSize, total } = this.state
         return (
@@ -183,10 +197,9 @@ class Pass extends Component {
                     >
                         <Column header="No." body={this.noTemplate} style={{ width: '5%' }} />
                         <Column body={this.nameTemplate} header="Name" sortable style={{ width: '30%' }} />
-                        <Column field="childrenPrice" header="Children Price" sortable style={{ width: '18%' }} />
-                        <Column field="price" header="Adult Price" sortable style={{ width: '18%' }} />
-                        <Column field="expireDuration" header="Expire (day)" sortable style={{ width: '15%' }} />
-                        <Column header="Action" body={this.deleteBodyTemplate} />
+                        <Column body={this.childrenPriceTemplate} field="childrenPrice" header="Children Price" sortable style={{ width: '18%' }} />
+                        <Column body={this.PriceTemplate} field="price" header="Adult Price" sortable style={{ width: '18%' }} />
+                        <Column field="expireDuration" header="Expire duration (days)" sortable style={{ width: '15%' }} />
                     </DataTable>
                     <Paginator rows={pageSize} totalRecords={total} first={pageIndex}
                         onPageChange={this.onPageChange}

@@ -177,7 +177,7 @@ class TicketTypes extends Component {
                         <Column field="childrenPrice" header="Children Price(VND)" sortable style={{ width: '16%' }} />
                         <Column field="atrraction" header="Attraction" sortable style={{ width: '17%' }} />
                         <Column field="city" header="City" sortable style={{ width: '15%' }} />
-                        <Column header="Action" body={this.deleteBodyTemplate} /> 
+                        {/* <Column header="Action" body={this.deleteBodyTemplate} />  */}
                     </DataTable>
                     <Paginator rows={pageSize} totalRecords={total} first={pageIndex}
                         onPageChange={this.onPageChange}

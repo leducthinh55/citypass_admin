@@ -11,6 +11,7 @@ import Attractions from "./pages/attractions";
 import Pass from "./pages/pass";
 import PassCreateUpdate from "./pages/pass/create-update";
 import AttractionCreateUpdate from "./pages/attractions/create-update";
+import CityCreateUpdate from "./pages/city/create-update";
 import Login from "./pages/auth/login";
 import City from "./pages/city";
 import TicketTypes from "./pages/ticket-type";
@@ -56,24 +57,30 @@ class App extends React.Component {
                             <TicketTypes />
                           </ProtectRouter>
                           <ProtectRouter exact path={ROUTER.TICKET_TYPE_CREATE}>
-                            <TicketTypeCreateUpdate/>
+                            <TicketTypeCreateUpdate />
                           </ProtectRouter>
                           <ProtectRouter exact path={ROUTER.TICKET_TYPE_UPDATE}>
-                            <TicketTypeCreateUpdate/>
+                            <TicketTypeCreateUpdate />
                           </ProtectRouter>
                           <ProtectRouter exact path={ROUTER.PASS}>
-                            <Pass/>
+                            <Pass />
                           </ProtectRouter>
                           <ProtectRouter exact path={ROUTER.PASS_CREATE}>
-                            <PassCreateUpdate/>
+                            <PassCreateUpdate />
                           </ProtectRouter>
                           <ProtectRouter exact path={ROUTER.PASS_UPDATE}>
-                            <PassCreateUpdate/>
+                            <PassCreateUpdate />
                           </ProtectRouter>
                           <ProtectRouter exact path={ROUTER.CITY}>
                             <City />
                           </ProtectRouter>
-                          <Redirect from='*' to={ROUTER.DASHBOARD} />
+                          <ProtectRouter exact path={ROUTER.CITY_CREATE}>
+                            <CityCreateUpdate />
+                          </ProtectRouter>
+                          <ProtectRouter exact path={ROUTER.CITY_UPDATE}>
+                            <CityCreateUpdate />
+                          </ProtectRouter>
+                          <Redirect from='*' to={ROUTER.ATTRACTIONS} />
                         </Switch>
                       </Col>
                     </Row>

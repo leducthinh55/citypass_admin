@@ -10,6 +10,7 @@ import * as ticketTypeService from "src/services/ticket-type/ticket-type.service
 import * as attractionService from "src/services/attractions/attraction.service";
 import { ROUTER } from 'src/constants';
 import { Toast } from 'primereact/toast';
+import { confirmDialog } from 'primereact/confirmdialog';
 class TicketTypeCreateUpdate extends Component {
     constructor(props) {
         super(props);
@@ -91,6 +92,16 @@ class TicketTypeCreateUpdate extends Component {
             await this.setState({ listAttractions })
         }
     }
+    onDelete = () => {
+        const { pathname } = this.props.location;
+        confirmDialog({
+            message: `Are you sure you want to DISABLE Dinh Bảo Đại?`,
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptClassName: 'p-button-danger',
+            accept: async () => this.props.history.push(ROUTER.TICKET_TYPE)
+        });
+    }
     render() {
         const { name, adultPrice, childrenPrice, disableAttraction, city, attraction, listCities, listAttractions } = this.state;
         const { pathname } = this.props.location;
@@ -106,7 +117,7 @@ class TicketTypeCreateUpdate extends Component {
                             <Row>
                                 <Col md="12">
                                     <Form.Group>
-                                        <label>NAME</label>
+                                        <label>NAME <span className='red-span'>(*)</span></label>
                                         <InputText className='col-12' value={name} onChange={(e) => this.setState({ name: e.target.value })} />
                                     </Form.Group>
                                 </Col>
@@ -114,25 +125,27 @@ class TicketTypeCreateUpdate extends Component {
                             <Row>
                                 <Col className="pr-1" md="6">
                                     <Form.Group>
-                                        <label>adult price</label>
+                                        <label>adult price (VND) <span className='red-span'>(*)</span></label>
                                         <InputText type='number' className='col-12' value={adultPrice} onChange={(e) => this.setState({ adultPrice: e.target.value })} />
                                     </Form.Group>
                                 </Col>
                                 <Col className="pr-1" md="6">
                                     <Form.Group>
-                                        <label>children price</label>
+                                        <label>children price (VND)</label>
                                         <InputText type='number' className='col-12' value={childrenPrice} onChange={(e) => this.setState({ childrenPrice: e.target.value })} />
                                     </Form.Group>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col className="pr-1" md="6">
+                                <label>City <span className='red-span'>(*)</span></label>
                                     <Dropdown options={listCities}
                                         value={city}
                                         onChange={this.onChangeCity}
                                         optionLabel="name" filterBy='name' className='col-12' placeholder="Select a City" style={{ padding: '0px' }} />
                                 </Col>
                                 <Col className="pr-1" md="6">
+                                <label>Attraction <span className='red-span'>(*)</span></label>
                                     <Dropdown options={listAttractions}
                                         disabled={disableAttraction}
                                         value={attraction}
@@ -140,19 +153,21 @@ class TicketTypeCreateUpdate extends Component {
                                         optionLabel="name" filterBy='name' className='col-12' placeholder="Select a Attraction" style={{ padding: '0px' }} />
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row className='mt-2'>
                                 <Col>
+                                    <Button
+                                        className="btn-fill pull-right"
+                                        variant="info"
+                                        style={{ width: '100px' }}
+                                    >
+                                        Save
+                                </Button>
+                                    <Button variant="danger" style={{ width: '100px' }}className="btn-fill pull-right ml-2" onClick={() => this.onDelete()} >Disable</Button>
 
                                 </Col>
+
                             </Row>
-                            <Button
-                                className="btn-fill pull-right"
-                                type="submit"
-                                variant="info"
-                            >
-                                Save Ticket Type
-                                </Button>
-                            <div className="clearfix"></div>
+
                         </Form>
                     </Card.Body>
                 </Card>

@@ -46,45 +46,31 @@ class Dashboard extends Component {
     render() {
         return (
             <div className="datatable-crud-demo">
-                <div className="card">
-                    <div>
+                <div>
+                    <div className="card">
                         <Row>
                             <Col>
                                 <h4 className='text-center'>Revenue and Profit (Million VND)</h4>
-                            </Col>
-                            <Col>
-                                <select>
-                                    <option>2018</option>
-                                    <option>2019</option>
-                                    <option>2020</option>
-                                    <option>2021</option>
-                                </select>
+                                {/* <Dropdown option={data} /> */}
                             </Col>
                         </Row>
                         <Chart type="bar" data={data} />
                     </div>
-                    <Row className='my-4'>
-                        <Col md='6'>
-                            <h3 className='text-center'>Vietnam and oversea (person)</h3>
-                            <select>
-                                <option>2018</option>
-                                <option>2019</option>
-                                <option>2020</option>
-                                <option>2021</option>
-                            </select>
-                            <Chart type="pie" data={data2} options={lightOptions2} />
-                        </Col>
-                        <Col md='6'>
-                            <h3 className='text-center'>Vietnam and oversea (person)</h3>
-                            <select>
-                                <option>2018</option>
-                                <option>2019</option>
-                                <option>2020</option>
-                                <option>2021</option>
-                            </select>
-                            <Chart type="pie" data={data2} options={lightOptions2} />
-                        </Col>
-                    </Row>
+                    <div className="card">
+                        <Row className='my-4'>
+                            <Col>
+                                <h3 className='text-center'>Vietnam and oversea (person)</h3>
+                                <select>
+                                    <option>2021</option>
+                                    <option>2020</option>
+                                    <option>2019</option>
+                                    <option>2018</option>
+                                </select>
+                                <Chart type="pie" data={data2} options={lightOptions2} />
+                            </Col>
+                        </Row>
+                    </div>
+
                 </div>
             </div>
         );

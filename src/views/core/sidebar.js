@@ -7,21 +7,21 @@ import Dashboard from '../pages/dashboard';
 import { useLocation, NavLink } from "react-router-dom";
 
 const routes = [
-  {
-    path: ROUTER.DASHBOARD,
-    name: "Dashboard",
-    icon: "nc-icon nc-chart-pie-35",
-  },
+  // {
+  //   path: ROUTER.DASHBOARD,
+  //   name: "Dashboard",
+  //   icon: "nc-icon nc-chart-pie-35",
+  // },
   {
     path: ROUTER.ATTRACTIONS,
     name: "Attraction",
     icon: "nc-icon nc-album-2",
   },
-  {
-    path: ROUTER.TICKET_TYPE,
-    name: "Ticket Type",
-    icon: "nc-icon nc-credit-card",
-  },
+  // {
+  //   path: ROUTER.TICKET_TYPE,
+  //   name: "Ticket Type",
+  //   icon: "nc-icon nc-credit-card",
+  // },
   {
     path: ROUTER.PASS,
     name: "Pass",

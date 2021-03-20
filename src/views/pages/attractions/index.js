@@ -171,8 +171,6 @@ class Attractions extends Component {
                         <Column body={this.nameTemplate} header="Name" sortable style={{ width: '28%' }} />
                         <Column field="category" header="Category" sortable style={{ width: '20%' }} />
                         <Column field="city" header="City" sortable style={{ width: '20%' }} />
-                        <Column body={this.isTemporarityClosedTemplate} header="IsClose" style={{ width: '12%' }} />
-                        <Column header="Action" body={this.deleteBodyTemplate} />
                     </DataTable>
                     <Paginator rows={pageSize} totalRecords={total} first={pageIndex}
                         onPageChange={this.onPageChange}
