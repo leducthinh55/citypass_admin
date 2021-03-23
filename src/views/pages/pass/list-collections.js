@@ -15,7 +15,11 @@ class ListCollections extends Component {
     componentDidMount = async () => {
         let listTicketType = (await ticketTypeService.search('', 0, 0, 0, '', '', '', -1, 0, 1000))?.data;
         listTicketType = listTicketType.map(v => { return { id: v.id, name: v.name, adultPrice: v.adultPrice, childrenPrice: v.childrenPrice } });
-        this.setState({ listTicketType });
+        await this.setState({ listTicketType, collections: this.props.collections });
+        setTimeout(() => {
+            this.setState({collections: this.props.collections});
+            
+        }, 1000)
     }
     addCollection = () => {
         const { collections } = this.state;
@@ -28,7 +32,7 @@ class ListCollections extends Component {
     }
     render() {
         const { listTicketType } = this.state;
-        const { collections } = this.props;
+        const { collections } = this.state;
         return (
             <div>
                 {collections.map((v, i) =>

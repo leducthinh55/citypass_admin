@@ -34,7 +34,7 @@ class PassCreateUpdate extends Component {
             if (!pass.urlImage) {
                 pass.urlImage = IMAGE_DEFAULT;
             }
-            this.setState({ ...pass });
+            await this.setState({ ...pass });
         }
     }
 
@@ -51,15 +51,15 @@ class PassCreateUpdate extends Component {
         }
         const { pathname } = this.props.location;
         collections = collections.map(v => {
-            const { MaxConstrain, ticketTypes } = v;
+            const { maxConstrain, ticketTypes } = v;
             const TicketTypeIds = ticketTypes.map(_ => _.id);
-            return { MaxConstrain, TicketTypeIds };
+            
+            return { maxConstrain, TicketTypeIds };
         })
         const data = {
             id, urlImage, name, description, price, childrenPrice, expireDuration, collections
         }
         if (pathname === ROUTER.PASS_CREATE) {
-            console.log('fasfasfasdf');
             const res = await passService.create(data);
             if (res) {
                 this.props.history.push(ROUTER.PASS);
@@ -68,12 +68,13 @@ class PassCreateUpdate extends Component {
             }
         }
         else {
-            // const res = await passService.update(data);
-            // if (res) {
-            //     this.props.history.push(ROUTER.PASS);
-            // }
-            // else {
-            // }
+            console.log(data);
+            const res = await passService.update(data);
+            if (res) {
+                this.props.history.push(ROUTER.PASS);
+            }
+            else {
+            }
         }
     }
     caculatePrice() {
@@ -84,13 +85,16 @@ class PassCreateUpdate extends Component {
             const maxConstrain = v.maxConstrain || 1;
             let tmpAdult = 0;
             let tmpChildren = 0
-            v.ticketTypes.map(_ => {
-                let { adultPrice = 0, childrenPrice = 0 } = _;
-                tmpAdult += adultPrice;
-                tmpChildren += childrenPrice;
-            });
-            adultPriceAdd += Math.floor(tmpAdult * maxConstrain / v.ticketTypes.length);
-            childrenPriceAdd += Math.floor(tmpChildren * maxConstrain / v.ticketTypes.length);
+            if (v.ticketTypes) {
+                v.ticketTypes.map(_ => {
+                    let { adultPrice = 0, childrenPrice = 0 } = _;
+                    tmpAdult += adultPrice;
+                    tmpChildren += childrenPrice;
+                });
+                adultPriceAdd += Math.floor(tmpAdult * maxConstrain / v.ticketTypes.length);
+                childrenPriceAdd += Math.floor(tmpChildren * maxConstrain / v.ticketTypes.length);
+            }
+
         })
         this.setState({ adultPriceAdd, childrenPriceAdd });
     }

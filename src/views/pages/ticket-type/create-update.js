@@ -142,7 +142,25 @@ class TicketTypeCreateUpdate extends Component {
                             </Row>
                             <Row>
                                 <Col>
-
+                                    {/* <Table>
+                                        <tbody>
+                                            {ticketTypes.map((v, i) =>
+                                                <tr key={i}>
+                                                    <td>{v.name}</td>
+                                                    <td><Button className='btn-fill pull-right' onClick={() => this.onDelete(i)} variant='danger'>Delete</Button></td>
+                                                </tr>
+                                            )}
+                                            <tr>
+                                                <td><Dropdown options={listTicketType}
+                                                    value={ticketType}
+                                                    filter
+                                                    onChange={(e) => this.setState({ ticketType: e.value })}
+                                                    optionLabel="name" filterBy='name' className='col-12' placeholder="Select a Attraction" />
+                                                </td>
+                                                <td><Button className='btn-fill pull-right' onClick={this.addTicketTypes}>Add</Button></td>
+                                            </tr>
+                                        </tbody>
+                                    </Table> */}
                                 </Col>
                             </Row>
                             <Button

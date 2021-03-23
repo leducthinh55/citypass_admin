@@ -8,6 +8,7 @@ export const signIn = (credentials) => {
         ).then((res) => {
             const currentUser = firebase.auth().currentUser;
             currentUser.getIdTokenResult().then(idTokenResult => {
+                console.log(idTokenResult);
                 currentUser.admin = idTokenResult.claims.admin;
                 if (!currentUser.admin) {
                     console.log('is not admin');

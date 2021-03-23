@@ -27,11 +27,11 @@ const routes = [
     name: "Pass",
     icon: "nc-icon nc-single-copy-04",
   },
-  {
-    path: ROUTER.CITY,
-    name: "City",
-    icon: "nc-icon nc-bank",
-  }
+  // {
+  //   path: ROUTER.CITY,
+  //   name: "City",
+  //   icon: "nc-icon nc-bank",
+  // }
 ];
 const SideBar = () => {
   const location = useLocation();

@@ -10,6 +10,7 @@ import * as categoryService from "src/services/category/category.service";
 import * as attractionService from "src/services/attractions/attraction.service";
 import { ROUTER } from 'src/constants';
 import { Toast } from 'primereact/toast';
+import Map from 'src/views/core/google-map';
 class AttractionCreateUpdate extends Component {
     constructor(props) {
         super(props);
@@ -18,8 +19,8 @@ class AttractionCreateUpdate extends Component {
         }
     }
     componentDidMount = async () => {
-        const listCities = (await cityService.search('', '', 1, 0, 1000))?.data;
         const listCategories = (await categoryService.search('', '', 1, 0, 1000))?.data;
+        console.log(listCategories);
         const { pathname } = this.props.location;
         if (pathname !== ROUTER.ATTRACTIONS_CREATE) {
             const attractions = await attractionService.searchById(this.props.match.params.id);
@@ -29,29 +30,33 @@ class AttractionCreateUpdate extends Component {
             }
             attractions.city.atrractions = null;
             attractions.category.atrractions = null;
-            this.setState({ listCities, listCategories, ...attractions });
+            let city = attractions.city.name;
+            attractions.city = null;
+            this.setState({  listCategories, ...attractions, city });
         }
         else {
-            this.setState({ listCities, listCategories });
+            this.setState({  listCategories });
         }
     }
 
     onSubmit = async (e) => {
         e.preventDefault();
         const { pathname } = this.props.location;
-        const { name, address, description, city, category, isTemporarityClosed } = this.state;
+        const { name, address, description, city, category, isTemporarityClosed, lat, lng } = this.state;
         const data = {
             id: this.props.match.params.id,
             name,
             address,
             description,
-            cityId: city.id,
+            cityName: city,
             categoryId: category.id,
-            isTemporarityClosed
+            isTemporarityClosed,
+            lat,
+            lng
         }
         if (pathname === ROUTER.ATTRACTIONS_CREATE) {
             const res = await attractionService.create(data);
-            if(res) {
+            if (res) {
                 this.showSuccess('Create Successful')
                 this.props.history.push(ROUTER.ATTRACTIONS);
             }
@@ -61,7 +66,7 @@ class AttractionCreateUpdate extends Component {
         }
         else {
             const res = await attractionService.update(data);
-            if(res) {
+            if (res) {
                 await this.showSuccess('Update Successful')
                 this.props.history.push(ROUTER.ATTRACTIONS);
             }
@@ -76,8 +81,17 @@ class AttractionCreateUpdate extends Component {
     showError(message) {
         this.toast.current.show({ severity: 'error', summary: 'Error Message', detail: message });
     }
+    onChangeAddress=(address) => {
+        this.setState({address});
+    }
+    onChangeCity = (city) => {
+        this.setState({city});
+    }
+    onChangePosision = (posision) =>  {
+        this.setState({...posision});
+    }
     render() {
-        const { name, address, description, city, category, isTemporarityClosed, listCities, listCategories } = this.state;
+        const { name, address, description, city, category, isTemporarityClosed, listCities, listCategories, lat = 10.835506154354318, lng = 106.8074849199463} = this.state;
         const { pathname } = this.props.location;
         return (
             <div className="datatable-crud-demo">
@@ -87,7 +101,7 @@ class AttractionCreateUpdate extends Component {
                         <Card.Title as="h4">{pathname == ROUTER.ATTRACTIONS_CREATE ? 'Create' : 'Edit'} Attractions</Card.Title>
                     </Card.Header>
                     <Card.Body>
-                        <Form onSubmit={this.onSubmit}>
+                        <Form>
                             <Row>
                                 <Col md="12">
                                     <Form.Group>
@@ -96,15 +110,16 @@ class AttractionCreateUpdate extends Component {
                                     </Form.Group>
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col md="12">
-                                    <Form.Group>
-                                        <label>ADDRESS</label>
-                                        <InputText className='col-12' value={address} onChange={(e) => this.setState({ address: e.target.value })} />
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
+                            <Map
+                                google={this.props.google}
+                                center={{ lat, lng }}
+                                height='300px'
+                                zoom={15}
+                                onChangeAddress={this.onChangeAddress}
+                                onChangeCity={this.onChangeCity}
+                                onChangePosision={this.onChangePosision}
+                            />
+                            <Row style={{marginTop: '100px'}}>
                                 <Col md="12">
                                     <Form.Group>
                                         <label>Desciption</label>
@@ -120,15 +135,6 @@ class AttractionCreateUpdate extends Component {
                                             value={category}
                                             onChange={(e) => this.setState({ category: e.value })}
                                             optionLabel="name" filterBy='name' className='col-12' placeholder="Select a Category" style={{ padding: '0px' }} />
-                                    </Form.Group>
-                                </Col>
-                                <Col className="pr-1" md="4">
-                                    <Form.Group>
-                                        <label>City</label>
-                                        <Dropdown options={listCities}
-                                            value={city}
-                                            onChange={(e) => this.setState({ city: e.value })}
-                                            optionLabel="name" filterBy='name' className='col-12' placeholder="Select a City" style={{ padding: '0px' }} />
                                     </Form.Group>
                                 </Col>
                                 <Col className="px-1" md="4">
@@ -151,8 +157,8 @@ class AttractionCreateUpdate extends Component {
                             </Row>
                             <Button
                                 className="btn-fill pull-right"
-                                type="submit"
                                 variant="info"
+                                onClick={this.onSubmit}
                             >
                                 Save Attraction
                                 </Button>
