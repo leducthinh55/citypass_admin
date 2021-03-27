@@ -2,10 +2,10 @@ import axiosClient from 'src/utils/axios-client'
 import { TICKET_TYPE } from "src/constants/api";
 import axios from "axios";
 import { PAGE_INDEX, SORT_BY, SORT_DIR, PAGE_SIZE } from "src/constants/common";
-const search = async (name, priceFrom, priceTo,priceType,attraction, city, sortBy = SORT_BY, sortDir = SORT_DIR, pageIndex = PAGE_INDEX, pageSize = PAGE_SIZE) => {
+const search = async (name, priceFrom, priceTo, priceType, attraction, city, sortBy = SORT_BY, sortDir = SORT_DIR, pageIndex = PAGE_INDEX, pageSize = PAGE_SIZE) => {
     try {
         const params = {
-            name, priceFrom, priceTo,priceType, attraction, city,
+            name, priceFrom, priceTo, priceType, attraction, city,
             sortBy,
             sortDir,
             pageIndex,
@@ -22,10 +22,34 @@ const search = async (name, priceFrom, priceTo,priceType,attraction, city, sortB
 
 }
 const create = async (data) => {
-    return await axiosClient.post(TICKET_TYPE, data);
+    const { id, name, adultPrice, childrenPrice, atrractionId, imageUpload } = data;
+    const formData = new FormData();
+    formData.append("id", id);
+    formData.append("name", name);
+    formData.append("adultPrice", adultPrice);
+    formData.append("childrenPrice", childrenPrice);
+    formData.append("atrractionId", atrractionId);
+    imageUpload.forEach(element => {
+        formData.append("imageUpload", element);
+    });
+    return await axiosClient.post(TICKET_TYPE, formData);
 }
 const update = async (data) => {
-    return await axiosClient.put(TICKET_TYPE, data);
+    const { id, name, adultPrice, childrenPrice, atrractionId, imageUpload, urlImages } = data;
+    const formData = new FormData();
+    formData.append("id", id);
+    formData.append("name", name);
+    formData.append("adultPrice", adultPrice);
+    formData.append("childrenPrice", childrenPrice);
+    formData.append("atrractionId", atrractionId);
+    urlImages.forEach(v => {
+        formData.append("urlImages", v);
+    })
+    imageUpload.forEach(element => {
+        formData.append("imageUpload", element);
+    });
+    
+    return await axiosClient.put(TICKET_TYPE, formData);
 }
 const searchById = async (id) => {
     try {

@@ -1,7 +1,7 @@
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import React, { Component } from 'react';
-import { Card, Form, Row, Col, Button } from "react-bootstrap";
+import { Card, Form, Row, Col, Button, Table } from "react-bootstrap";
 import { Dropdown } from 'primereact/dropdown';
 import { RadioButton } from 'primereact/radiobutton';
 import { withRouter } from 'react-router-dom';
@@ -10,6 +10,7 @@ import * as ticketTypeService from "src/services/ticket-type/ticket-type.service
 import * as attractionService from "src/services/attractions/attraction.service";
 import { ROUTER } from 'src/constants';
 import { Toast } from 'primereact/toast';
+import axios from 'axios';
 class TicketTypeCreateUpdate extends Component {
     constructor(props) {
         super(props);
@@ -19,7 +20,10 @@ class TicketTypeCreateUpdate extends Component {
             city: '',
             adultPrice: 0,
             childrenPrice: 0,
-            name: ''
+            name: '',
+            newUrlImages: [],
+            imageUpload: [],
+            urlImages:[]
         }
     }
     componentDidMount = async () => {
@@ -46,33 +50,32 @@ class TicketTypeCreateUpdate extends Component {
     onSubmit = async (e) => {
         e.preventDefault();
         const { pathname } = this.props.location;
-        const { name, adultPrice, childrenPrice, urlImage, attraction } = this.state;
+        const { name, adultPrice, childrenPrice, urlImages, attraction, imageUpload } = this.state;
         const data = {
             id: this.props.match.params.id,
             name,
             adultPrice,
             childrenPrice,
-            urlImage,
             atrractionId: attraction.id
         }
+
         if (pathname === ROUTER.TICKET_TYPE_CREATE) {
+            data.imageUpload = imageUpload;
             const res = await ticketTypeService.create(data);
             if (res) {
-                this.showSuccess('Create Successful')
                 this.props.history.push(ROUTER.TICKET_TYPE);
             }
             else {
-                this.showError('Create Fail')
             }
         }
         else {
+            data.imageUpload = imageUpload;
+            data.urlImages = urlImages;
             const res = await ticketTypeService.update(data);
             if (res) {
-                await this.showSuccess('Update Successful')
                 this.props.history.push(ROUTER.TICKET_TYPE);
             }
             else {
-                this.showError('Update Fail')
             }
         }
     }
@@ -91,8 +94,34 @@ class TicketTypeCreateUpdate extends Component {
             await this.setState({ listAttractions })
         }
     }
+    imageHander = (e) => {
+        const { newUrlImages, imageUpload } = this.state;
+        const reader = new FileReader();
+        reader.onload = () => {
+            if (reader.readyState === 2) {
+                newUrlImages.push(reader.result);
+                this.setState({ newUrlImages });
+            }
+        }
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]);
+            imageUpload.push(e.target?.files[0])
+            this.setState({ imageUpload });
+        }
+    }
+    onDeleteImage = (i) => {
+        const { newUrlImages, imageUpload } = this.state;
+        newUrlImages.splice(i, 1);
+        imageUpload.splice(i, 1);
+        this.setState({ newUrlImages, imageUpload });
+    }
+    onDeleteOldImage = (i) => {
+        const { urlImages } = this.state;
+        urlImages.splice(i, 1);
+        this.setState({ urlImages });
+    }
     render() {
-        const { name, adultPrice, childrenPrice, disableAttraction, city, attraction, listCities, listAttractions } = this.state;
+        const { name, adultPrice, childrenPrice, disableAttraction, city, attraction, listCities, listAttractions, newUrlImages = [], image, urlImages } = this.state;
         const { pathname } = this.props.location;
         return (
             <div className="datatable-crud-demo">
@@ -142,25 +171,25 @@ class TicketTypeCreateUpdate extends Component {
                             </Row>
                             <Row>
                                 <Col>
-                                    {/* <Table>
+                                    <Table>
                                         <tbody>
-                                            {ticketTypes.map((v, i) =>
+                                            {urlImages.map((v, i) =>
                                                 <tr key={i}>
-                                                    <td>{v.name}</td>
-                                                    <td><Button className='btn-fill pull-right' onClick={() => this.onDelete(i)} variant='danger'>Delete</Button></td>
+                                                    <td><img src={v} /></td>
+                                                    <td><Button className='btn-fill pull-right' onClick={() => this.onDeleteOldImage(i)} variant='danger'>Delete</Button></td>
+                                                </tr>
+                                            )}
+                                            {newUrlImages.map((v, i) =>
+                                                <tr key={i}>
+                                                    <td><img src={v} /></td>
+                                                    <td><Button className='btn-fill pull-right' onClick={() => this.onDeleteImage(i)} variant='danger'>Delete</Button></td>
                                                 </tr>
                                             )}
                                             <tr>
-                                                <td><Dropdown options={listTicketType}
-                                                    value={ticketType}
-                                                    filter
-                                                    onChange={(e) => this.setState({ ticketType: e.value })}
-                                                    optionLabel="name" filterBy='name' className='col-12' placeholder="Select a Attraction" />
-                                                </td>
-                                                <td><Button className='btn-fill pull-right' onClick={this.addTicketTypes}>Add</Button></td>
+                                                <td><input type='file' onChange={this.imageHander} value={(e) => { this.setState({ image: e.target.value }) }} /></td>
                                             </tr>
                                         </tbody>
-                                    </Table> */}
+                                    </Table>
                                 </Col>
                             </Row>
                             <Button

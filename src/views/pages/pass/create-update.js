@@ -43,7 +43,7 @@ class PassCreateUpdate extends Component {
         const { image, name, description, price, childrenPrice, expireDuration } = this.state;
         const id = this.props.match.params?.id;
         let { collections } = this.state;
-        let urlImage = '';
+        let { urlImage = '' } = this.state;
         if (image) {
             const random = Math.floor(Math.random() * 9999999);
             await storage.ref(`images/pass/${image.name}-${random}`).put(image);
@@ -53,7 +53,7 @@ class PassCreateUpdate extends Component {
         collections = collections.map(v => {
             const { maxConstrain, ticketTypes } = v;
             const TicketTypeIds = ticketTypes.map(_ => _.id);
-            
+
             return { maxConstrain, TicketTypeIds };
         })
         const data = {
